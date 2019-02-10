@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Q2Q</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+<div class="header" style="margin-top: 40px">
+    <h1 class="display-1 mx-auto text-dark text-center" style="width: 400px; font-family: Tahoma, Geneva, sans-serif">Q2Q</h1>
+</div>
+<div class="container">
+    <div class="mx-auto" style="width: 700px;">
+        <form action="/" method="POST">
+            <div class="form-group">
+                <label for="questionInput">Question</label>
+                <input type="text" class="form-control" id="questionInput" name="Question" placeholder="Enter question">
+            </div>
+            <div class="form-group">
+                <label for="tableInput">Table/Table Header</label>
+                <input type="text" class="form-control" id="tableInput" name="Table" placeholder="Enter table">
+            </div>
+            <div class="font-weight-light font-italic text-muted">
+            	<small>Please try with "table_election" or "table_mlb" and ask any questions from the tables.</small>
+            </div>
+            <div class="font-weight-light font-italic text-muted">
+            	<small>Such as "Which player is from Utah?" "What are the results for New York 6 district?"</small>
+            </div>
+            <div class="text-center" style="margin-top: 20px; margin-bottom: 20px">
+                <button type="submit" class="btn btn-dark btn-lg" style="width: 300px;" value="submit">Submit
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="text-dark" style="margin-top: 50px; margin-bottom: 20px">
+        {% if question %}
+            <div><b>Question:</b> {{ question }}</div>
+            <div><b>Query:</b> {{ query }}</div>
+        {% endif %}
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+        <tr>
+            {% for row in header %}
+                <th scope="col">{{ row }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        {% for row in table %}
+            <tr>
+                {% for col in row %}
+                    <td> {{ col }} </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div class="text-muted text-right" style="position: fixed; bottom: 0; width: 100%">
+    © 2019 Meghan Zhao. Beta.
+</div>
+</body>
+</html>
