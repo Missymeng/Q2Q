@@ -5,12 +5,6 @@ import re
 import random
 from flaskapp.run_model import run_model
 from flaskapp import app
-# app = Flask(__name__)
-
-with open('flaskapp/tables/question_query.csv', 'r') as f:
-    reader = csv.reader(f)
-    q_q = list(reader)
-print("shape of q_q", len(q_q), len(q_q[0]))
 
 @app.route('/')
 def index():
@@ -25,12 +19,6 @@ def sen2query():
         question = ""
         table_name = request.form['Table']
         question = request.form['Question']
-        if ("Player" in table_name or "player" in table_name or
-            "Position" in table_name or 'position' in table_name):
-            table_name = 'table_mlb'
-        elif ("District" in table_name or "district" in table_name or
-                "Party" in table_name or 'party' in table_name):
-            table_name = 'table_election'
 
         num_col = 0
         if table_name == 'table_election':
@@ -39,9 +27,6 @@ def sen2query():
         elif table_name == 'table_mlb':
             header = ['Player', 'Position', 'School', 'Hometown', 'College']
             num_col = 5
-        else:
-            table_name = "No such table"
-            return render_template("index.html", table_name=table_name)
 
         conn = sqlite3.connect("flaskapp/try")
         c = conn.cursor()
@@ -54,33 +39,10 @@ def sen2query():
             return render_template("index.html", table_name=table_name, header=header, table=table)
 
         ### submit question ###
-        query_name = ""
-        col_id = ""
-        for line in q_q:
-            if question.lower() in line[1].lower():
-                query_id = line[2]
-                query_name = line[4]
-                col_id = line[3]
-                col_id = int(re.findall('\d+', col_id)[0])
-                print("Question: ", question)
-                break
-        if query_name == "":
-            question_words = re.sub(r'[^\w\s]', '', question)
-            word_list = question_words.lower().split()
-            ran_idx = random.randint(0, len(word_list) - 1)
-            for line in q_q:
-                if word_list[ran_idx] in line[1].lower():
-                    query_id = line[2]
-                    query_name = line[4]
-                    col_id = line[3]
-                    col_id = int(re.findall('\d+', col_id)[0])
-                    print("Question: ", question)
-                    break
-        if query_name == "":
-            # query_name = "Query not generated"
-            query_name = run_model(question.lower())
-            print("Query:", query_name)
-            return render_template("index.html", table_name=table_name, question=question, query=query_name)
+        # query_name = "Query not generated"
+        query_name = run_model(question.lower())
+        print("Query:", query_name)
+        return render_template("index.html", table_name=table_name, question=question, query=query_name)
 
         conn1 = sqlite3.connect("flaskapp/test.db")
         c1 = conn1.cursor()
